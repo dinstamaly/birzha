@@ -77,7 +77,6 @@ class UserRegisterSerializer(serializers.ModelSerializer):
 
         user_obj = User(
             username=validated_data.get('username'),
-            email=validated_data.get('email'),
             user_type=validated_data.get('user_type')
 
         )
