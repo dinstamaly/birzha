@@ -14,7 +14,7 @@ expire_delta = settings.JWT_AUTH['JWT_REFRESH_EXPIRATION_DELTA']
 
 
 class UserPublicSerializer(serializers.ModelSerializer):
-    # uri = serializers.SerializerMethodField(read_only=True)
+    uri = serializers.SerializerMethodField(read_only=True)
 
     class Meta:
         model = User
@@ -22,18 +22,17 @@ class UserPublicSerializer(serializers.ModelSerializer):
             'id',
             'username',
             'user_type',
-            # 'uri'
+            'uri'
         ]
 
     def get_uri(self, obj):
         request = self.context.get('request')
-        # return api_reverse("api-user:user-detail", kwargs={"username": obj.username}, request=request)
+        return api_reverse("api-user:user-detail", kwargs={"username": obj.username}, request=request)
 
 
 class UserRegisterSerializer(serializers.ModelSerializer):
     password2 = serializers.CharField(style={'input_type': 'password'}, write_only=True)
     token     = serializers.SerializerMethodField(read_only=True)
-    # expires   = serializers.SerializerMethodField(read_only=True)
     message   = serializers.SerializerMethodField(read_only=True)
 
     class Meta:
@@ -43,8 +42,8 @@ class UserRegisterSerializer(serializers.ModelSerializer):
             'password',
             'password2',
             'user_type',
+            'balance',
             'token',
-            # 'expires',
 
             'message'
         ]
@@ -77,7 +76,9 @@ class UserRegisterSerializer(serializers.ModelSerializer):
 
         user_obj = User(
             username=validated_data.get('username'),
-            user_type=validated_data.get('user_type')
+            user_type=validated_data.get('user_type'),
+            balance=validated_data.get('balance'),
+
 
         )
         user_obj.set_password(validated_data.get('password'))
