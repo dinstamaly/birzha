@@ -28,7 +28,7 @@ class TaskSerializer(serializers.ModelSerializer):
 class OrderSerializer(serializers.ModelSerializer):
     uri = serializers.SerializerMethodField(read_only=True)
     task = serializers.PrimaryKeyRelatedField(
-        queryset=Task.objects.all(),
+        queryset=Task.objects.filter(done=False),
     )
     task_name = TaskSerializer(
         source='task',
@@ -40,6 +40,7 @@ class OrderSerializer(serializers.ModelSerializer):
         fields = (
             'id',
             'task',
+            'user',
             'task_name',
             'open',
             'date',
